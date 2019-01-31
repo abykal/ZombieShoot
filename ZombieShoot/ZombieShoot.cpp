@@ -3,6 +3,8 @@
 
 #include "pch.h"
 #include <SFML/Graphics.hpp>
+
+#include "ZombieShoot.h"
 #include "Player.h"
 
 using namespace sf;
@@ -20,7 +22,7 @@ int main()
 	resolution.y = VideoMode::getDesktopMode().height;
 
 	RenderWindow window(VideoMode(resolution.x, resolution.y),
-		"Zombie Arena", Style::Fullscreen);
+		"Zombie Shoot", Style::Fullscreen);
 
 	// Create a an SFML View for the main action
 	View mainView(sf::FloatRect(0, 0, resolution.x, resolution.y));
@@ -41,6 +43,12 @@ int main()
 	// The boundaries of the arena
 	IntRect arena;
 
+	// Create the background
+	VertexArray background;
+	// Load the texture for our background vertex array
+	Texture textureBackground;
+	textureBackground.loadFromFile("graphics/background_sheet.png");
+
 	// The main game loop
 	while (window.isOpen())
 	{
@@ -50,7 +58,7 @@ int main()
 		************
 		*/
 
-		// Handle events - poll for system events in each frame
+		// Handle events
 		Event event;
 		while (window.pollEvent(event))
 		{
@@ -87,7 +95,7 @@ int main()
 		}// End event polling
 
 
-		// Handle the player quitting
+		 // Handle the player quitting
 		if (Keyboard::isKeyPressed(Keyboard::Escape))
 		{
 			window.close();
@@ -135,7 +143,7 @@ int main()
 
 		}// End WASD while playing
 
-		// Handle the levelling up state
+		 // Handle the levelling up state
 		if (state == State::LEVELING_UP)
 		{
 			// Handle the player levelling up
@@ -171,15 +179,16 @@ int main()
 
 			if (state == State::PLAYING)
 			{
-				// Prepare the level
-				// TODO: We will modify the next two lines later
+				// Prepare thelevel
+				// We will modify the next two lines later
 				arena.width = 500;
 				arena.height = 500;
 				arena.left = 0;
 				arena.top = 0;
 
-				// We will modify this line of code later
-				int tileSize = 50;
+				// Pass the vertex array by reference 
+				// to the createBackground function
+				int tileSize = createBackground(background, arena);
 
 				// Spawn the player in the middle of the arena
 				player.spawn(arena, resolution, tileSize);
@@ -189,11 +198,11 @@ int main()
 			}
 		}// End levelling up
 
-		/*
-		****************
-		UPDATE THE FRAME
-		****************
-		*/
+		 /*
+		 ****************
+		 UPDATE THE FRAME
+		 ****************
+		 */
 		if (state == State::PLAYING)
 		{
 			// Update the delta time
@@ -220,11 +229,11 @@ int main()
 			mainView.setCenter(player.getCenter());
 		}// End updating the scene
 
-		/*
-		**************
-		Draw the scene
-		**************
-		*/
+		 /*
+		 **************
+		 Draw the scene
+		 **************
+		 */
 
 		if (state == State::PLAYING)
 		{
@@ -233,6 +242,9 @@ int main()
 			// set the mainView to be displayed in the window
 			// And draw everything related to it
 			window.setView(mainView);
+
+			// Draw the background
+			window.draw(background, &textureBackground);
 
 			// Draw the player
 			window.draw(player.getSprite());
@@ -256,4 +268,3 @@ int main()
 
 	return 0;
 }
-
