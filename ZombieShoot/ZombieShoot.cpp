@@ -6,6 +6,7 @@
 
 #include "ZombieShoot.h"
 #include "Player.h"
+#include "TextureHolder.h"
 
 using namespace sf;
 
@@ -47,8 +48,7 @@ int main()
 	// Create the background
 	VertexArray background;
 	// Load the texture for our background vertex array
-	Texture textureBackground;
-	textureBackground.loadFromFile("graphics/background_sheet.png");
+	Texture textureBackground = TextureHolder::GetTexture("graphics/background_sheet.png");
 
 	// Prepare for a horde of zombies
 	int numZombies;
